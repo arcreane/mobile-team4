@@ -3,12 +3,14 @@ package com.teamfour.motcacher;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.MotionEventCompat;
 
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -26,7 +28,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -57,6 +60,14 @@ public class MainActivity extends AppCompatActivity {
     //Buttons
     Button Btn;
 
+    //le Timer
+    TextView timer;
+    public int timecount = 60;
+
+    //Score
+    TextView Score;
+    public int leScore = 0;
+
 
 
     @Override
@@ -64,8 +75,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //init boutton
-        Btn =findViewById(R.id.button);
+        //init
+        timer =findViewById(R.id.time);
+        Score =findViewById(R.id.score);
+
+        //this method is used to refresh Time every Second
+
+        refreshTime();
 
 
 
@@ -149,18 +165,40 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Btn.setOnClickListener(new View.OnClickListener() {
-
-            public void onClick(View v) {
-                gd.invalidateViews();
-
-            }
-        });
-
-
 
 
     }
+
+
+    private void refreshTime(){
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        if(timecount>0) {
+                            timecount--;
+                            timer.setText("Time: " + timecount);
+                            Score.setText("Score: " + leScore);
+                        }
+                        else
+                            gotoScore(String.valueOf(leScore));
+
+                    };
+                });
+            }
+        }, 0, 1000);//1000 is a Refreshing Time (1second)
+    };
+
+    void gotoScore(String finalscore)
+    {
+        Intent intent = new Intent(this,ScoreScreen.class);
+        intent.putExtra("score", finalscore );
+        startActivity(intent);
+    }
+
 
     boolean checking(String S)
     {
@@ -170,6 +208,14 @@ public class MainActivity extends AppCompatActivity {
         {
             motss.add(S);
             check = true;
+
+            if (true == timecount > 50) {
+                leScore += 500;
+            } else if (true == timecount > 30 && timecount < 50) {
+                leScore +=200;
+            } else {
+                leScore +=100;
+            }
 
         }
 
