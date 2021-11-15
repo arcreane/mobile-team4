@@ -109,20 +109,28 @@ public class MainActivity extends AppCompatActivity {
                     if( !theword.contains(position)){
                         theword.add(  position  );
                         lemot.append(gd.getItemAtPosition(position).toString());
+
+                        gd.getChildAt(position).setBackgroundColor(Color.parseColor("#18A608"));
                     }
 
                 }
 
                 else if( action == MotionEvent.ACTION_UP) {
                     Log.d(TAG, "onTouch: " + lemot.getText().toString() );
-                    checking( lemot.getText().toString() );
+                    //checking( lemot.getText().toString() );
 
+                    if( checking( lemot.getText().toString() ) == false ) {
+                        for(int pos : theword)
+                        {
+                            gd.getChildAt(pos).setBackgroundColor(Color.parseColor("#ffffff"));
+
+                        }
+                        theword.clear();
+                    }
 
                     lemot.setText("");
-                    for(int pos : theword)
-                    {
-                        gd.getChildAt(pos).setBackgroundColor(Color.parseColor("#18A608"));
-                    }
+
+
                 }
                 return true;
             }
@@ -133,16 +141,20 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    void checking(String S)
+    boolean checking(String S)
     {
+        boolean check = false;
 
         if( Arrays.asList(EnglishWords).contains(S.toLowerCase()) )
         {
             motss.add(S);
+            check = true;
 
         }
 
         listView.invalidateViews();
+
+        return check;
     }
 
 
