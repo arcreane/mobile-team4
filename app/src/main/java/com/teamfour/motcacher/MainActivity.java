@@ -115,8 +115,8 @@ public class MainActivity extends AppCompatActivity {
 
                 else if( action == MotionEvent.ACTION_UP) {
                     Log.d(TAG, "onTouch: " + lemot.getText().toString() );
-                    //checking( lemot.getText().toString() );
-                    checking("cop");
+                    checking( lemot.getText().toString() );
+
 
                     lemot.setText("");
                     for(int pos : theword)
